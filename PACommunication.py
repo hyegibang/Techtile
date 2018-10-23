@@ -1,7 +1,7 @@
 import serial, time
 import struct
 
-ser = serial.Serial('/dev/ttyACM1', 9600, timeout=.1)
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
 time.sleep(1) #give the connection a second to settle
 
 def led_one():

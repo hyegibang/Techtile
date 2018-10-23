@@ -39,7 +39,7 @@ void loop() {
         case 10:
           digitalWrite(pin,HIGH);
           digitalWrite(pint,LOW);
-          Motorone -> setSpeed(0);
+          Motorone -> setSpeed(50);
           Motortwo -> setSpeed(0);
           delay(200); 
           break;
