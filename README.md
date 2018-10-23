@@ -1,12 +1,14 @@
 # Techtile
 
-One Paragraph of project description goes here
+The goal of this project for the Principle of Engineering class is to print the music notes and rythmn encoded in a midi file in braille.  We hope to make music resources more available to people who are visually impaired
+
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+These instructions will get you a copy of the project up and running on your local machine.
 
 ### Prerequisites
+The project runs with Python2.7.
 
 The [python-midi](https://github.com/vishnubob/python-midi) library used for this project depends on [Swig](http://www.swig.org/).
 ```
@@ -23,17 +25,19 @@ cd \path-to-python-midi-library
 sudo python setup.py install
 ```
 
+### Running
+Load code in ```testassembly.ino``` to an Arduino Board. Check the port and modify it accordingly in ```Midi2Braille.py```. Then run the following command to perform Midi to Braille conversion and Python to Arduino communication:
+```python Midi2Braille.py```.
+
 
 ## Built With
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* [Python-Midi](https://github.com/vishnubob/python-midi)
 
 ## Authors
 
-* **Sherrie Shen**
 * **Hyegi Bang **
-* **Mark Goldwater **
 * **Abby Fry **
+* **Sherrie Shen**
+* **Mark Goldwater **
 * **Tommy Weir**
