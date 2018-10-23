@@ -27,17 +27,17 @@ sudo python setup.py install
 
 ### Running
 Load code in ```testassembly.ino``` to an Arduino Board. Check the port and modify it accordingly in ```Midi2Braille.py```. Then run the following command to perform Midi to Braille conversion and Python to Arduino communication:
-```python Midi2Braille.py```.
+```
+python Midi2Braille.py
+```
 
-
-## Built With
+### Built With
 
 * [Python-Midi](https://github.com/vishnubob/python-midi)
 
-## Authors
-
-* **Hyegi Bang **
-* **Abby Fry **
-* **Sherrie Shen**
-* **Mark Goldwater **
-* **Tommy Weir**
+### Authors
+* Hyegi Bang
+* Abby Fry
+* Mark Goldwater
+* Sherrie Shen
+* Tommy Weir
