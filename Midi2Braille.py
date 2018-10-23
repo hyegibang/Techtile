@@ -3,7 +3,7 @@ import serial
 import time
 
 # Build commmunication between Arduino and Python
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+ser = serial.Serial('/dev/ttyACM1', 9600, timeout=.1)
 time.sleep(1)
 
 class Notes(object):

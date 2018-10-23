@@ -1,7 +1,7 @@
 import serial, time
 import struct
 
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+ser = serial.Serial('/dev/ttyACM1', 9600, timeout=.1)
 time.sleep(1) #give the connection a second to settle
 
 def led_one():
@@ -22,7 +22,7 @@ def ardread():
 	print(data)
 	time.sleep(2)
 
-led_zero()
+led_one()
 #
 # for i in range(5):
 # 	led_one()
