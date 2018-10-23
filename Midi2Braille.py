@@ -86,10 +86,11 @@ class MusicBraille(object):
 
     def run(self):
         self.GetNotesFromMidi()
+        print "hello"
         self.Notes2Braile()
         self.SendData2Arduino()
 
-if __name__ == "___main___":
-    braille = MusicBraille("mary.mid")
-    braille.run()
 
+if __name__ == "__main__":
+    braille = MusicBraille("twinkle_twinkle.mid")
+    braille.run()
