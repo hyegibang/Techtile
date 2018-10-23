@@ -4,7 +4,6 @@
     <list default="true" id="5695e0a6-8653-481f-a64f-9e22de99fe59" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Midi2Braille.py" beforeDir="false" afterPath="$PROJECT_DIR$/Midi2Braille.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/PACommunication.py" beforeDir="false" afterPath="$PROJECT_DIR$/PACommunication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Python-Arduino/Python-Arduino.ino" beforeDir="false" afterPath="$PROJECT_DIR$/Python-Arduino/Python-Arduino.ino" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,18 +19,19 @@
     <session id="-1015027706">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
+          <entry key="project.closed" value="1" />
           <entry key="project.open.time.5" value="1" />
           <entry key="project.opened" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="359" />
+          <entry key="py" value="399" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="359" />
+          <entry key="Python" value="399" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -49,32 +49,7 @@
     </session>
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Midi2Braille.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-940">
-              <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-              <folding>
-                <element signature="e#0#11#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/PACommunication.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#19#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -82,8 +57,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/Midi2Braille.py" />
         <option value="$PROJECT_DIR$/PACommunication.py" />
+        <option value="$PROJECT_DIR$/Midi2Braille.py" />
       </list>
     </option>
   </component>
@@ -94,9 +69,9 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="147" />
-    <option name="y" value="83" />
-    <option name="width" value="1650" />
+    <option name="x" value="428" />
+    <option name="y" value="57" />
+    <option name="width" value="1651" />
     <option name="height" value="1056" />
   </component>
   <component name="ProjectView">
@@ -180,10 +155,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="147" y="83" width="1650" height="1056" extended-state="0" />
-    <editor active="true" />
+    <frame x="428" y="57" width="1651" height="1056" extended-state="0" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.06982543" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.06978193" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -215,8 +189,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/Midi2Braille.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-940">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
+        <state relative-caret-position="124">
+          <caret line="70" column="27" lean-forward="true" selection-start-line="70" selection-start-column="27" selection-end-line="70" selection-end-column="27" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
@@ -225,8 +199,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/PACommunication.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="133">
-          <caret line="7" column="17" lean-forward="true" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
+        <state relative-caret-position="437">
+          <caret line="23" lean-forward="true" selection-end-line="32" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

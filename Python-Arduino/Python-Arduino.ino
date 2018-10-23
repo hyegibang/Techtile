@@ -27,15 +27,13 @@ void loop() {
         
       else if(serialInt == 10){
         digitalWrite(pin,HIGH);
-        digitalWrite(pint,HIGH);
+        digitalWrite(pint,LOW);
         }
 
       else if(serialInt == 11){
         digitalWrite(pin,LOW);
         digitalWrite(pint,HIGH);
         }
-        
-      
   }
   }
   
