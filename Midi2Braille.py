@@ -82,7 +82,8 @@ class MusicBraille(object):
     def SendData2Arduino(self):
         for note in self.notes.values():
             braille = note.braille
-        pass
+            command = ''.join(str(data) for data in braille)
+            #print command
 
     def run(self):
         self.GetNotesFromMidi()
