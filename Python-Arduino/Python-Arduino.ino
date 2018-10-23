@@ -1,6 +1,7 @@
-char serialData; 
+char serialData ; 
 int pin = 13; 
 int pint = 12;
+int serialInt;
 
 void setup() {
   Serial.begin(9600);
@@ -8,17 +9,31 @@ void setup() {
   pinMode(pint, OUTPUT);
 }
 void loop() {
-  if(Serial.available() > 0){ 
-    serialData = Serial.read();
+  if(Serial.available() > 0){
+      serialData = Serial.read();
+      serialInt = serialData;
+      Serial.println(serialData);
+      Serial.print(serialInt);
     
-      if(serialData == '1'){
+      if(serialInt == 0){
         digitalWrite(pin,LOW);
         digitalWrite(pint,HIGH);
         }
-      else if(serialData == '0'){
+        
+      else if(serialInt == 1){
         digitalWrite(pin,HIGH);
         digitalWrite(pint,LOW);
         }
+        
+      else if(serialInt == 10){
+        digitalWrite(pin,HIGH);
+        digitalWrite(pint,LOW);
+        }
+
+      else if(serialInt == 11){
+        digitalWrite(pin,LOW);
+        digitalWrite(pint,HIGH);
+        }
+  }
+  }
   
-}
-}
