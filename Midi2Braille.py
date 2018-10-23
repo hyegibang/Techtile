@@ -1,5 +1,10 @@
 import midi
+import serial
+import time
 
+# Build commmunication between Arduino and Python
+ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+time.sleep(1)
 
 class Notes(object):
     def __init__(self, id, pitch, rythmn, time, velocity):
@@ -83,7 +88,12 @@ class MusicBraille(object):
         for note in self.notes.values():
             braille = note.braille
             command = ''.join(str(data) for data in braille)
-            #print command
+            ser.write(command)
+            print(command, "sent")
+            time.sleep(.1)
+
+
+
 
     def run(self):
         self.GetNotesFromMidi()
