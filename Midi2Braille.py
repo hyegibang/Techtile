@@ -91,7 +91,7 @@ class MusicBraille(object):
             #command.append(str(data) for data in braille)
             ser.write(braille)
             print(braille, "sent")
-            time.sleep(.1)
+            time.sleep(1.5)
 
 
 
