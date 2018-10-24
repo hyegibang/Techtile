@@ -11,6 +11,12 @@ int serialInt;
 void setup() {
   Serial.begin(9600);
   AFMS.begin();
+
+  Motorone -> setSpeed(0);
+  Motorone->run(FORWARD);
+
+  Motortwo -> setSpeed(0);
+  Motortwo->run(FORWARD);
 }
 void loop() {
   if(Serial.available() > 0) {
@@ -20,18 +26,24 @@ void loop() {
       Serial.print(serialInt);
     
       if(serialInt == 0) {
-        Motorone -> setSpeed(0);
-        Motortwo -> setSpeed(40);
-        Motorone->run(FORWARD);
+        
+        Motortwo -> setSpeed(180);
         Motortwo->run(FORWARD);
+        delay(30);
+        Motortwo -> run(BACKWARD);
+        delay(38);
+        Motortwo -> setSpeed(0);
         }
         
       else if(serialInt == 1) {
-        Motorone -> setSpeed(40);
-        Motortwo -> setSpeed(0);
+        
+        Motorone -> setSpeed(180);
         Motorone->run(FORWARD);
-        Motortwo->run(FORWARD);
-        }
+        delay(30);
+        Motorone -> run(BACKWARD);
+        delay(38);
+        Motorone -> setSpeed(0);
+      }
         
       else if(serialInt == 10) {
         Motorone -> setSpeed(0);
