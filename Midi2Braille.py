@@ -3,21 +3,31 @@ import serial
 import time
 import struct
 
-# Build commmunication between Arduino and Python
-ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-time.sleep(1)
 
 class Notes(object):
     def __init__(self, id, pitch, rythmn, time, velocity):
         self.id = id
-        self.pitch = pitch
         self.rythmn = rythmn
+        self.pitch = pitch
+        self.note = None
+        self.octv = None
+        self.sharpstatus = False
         self.timeon = time
         self.velocity = velocity
         self.braille = None
 
     def Rythmn2Braille(self, BrailleRythmn):
         self.braille = BrailleRythmn[self.rythmn]
+
+    def Pitch2Notes(self):
+        allnotes = "C C#D D#E F F#G G#A A#B "
+        self.octv = self.pitch / 12 - 1
+        start = self.pitch % 12 * 2
+        end = self.pitch % 12 * 2 + 2
+        nt = allnotes[start:end]
+        self.note = nt[0]
+        if nt[1] == "#":
+            self.sharpstatus = True
 
 
 class MusicBraille(object):
@@ -79,26 +89,20 @@ class MusicBraille(object):
                         id_count += 1
                         del noteson[event.data[0]]
 
-    @staticmethod
-    def Pitch2Notes(pitch):
-        allnotes = "C C#D D#E F F#G G#A A#B "
-        octv = pitch/12 - 1
-        start = pitch % 12 * 2
-        end = pitch % 12 * 2 + 2
-        nt = allnotes[start:end]
-        print "Note:", pitch, "octave: :", octv, "note: ", nt
-        return octv, nt
-
     def Notes2Braile(self):
         BrailleRythmn = MusicBraille.Rythmn2Braille()
         for note in self.notes.values():
             note.Rythmn2Braille(BrailleRythmn)
-            print note.id, note.pitch, note.rythmn, note.timeon, note.braille
+            note.Pitch2Notes()
+            print note.id, note.pitch, note.rythmn, note.timeon, note.braille, note.octv, note.note, note.sharpstatus
 
     def SendData2Arduino(self):
+        # Build commmunication between Arduino and Python
+        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        time.sleep(1)
         for note in self.notes.values():
             braille = note.braille
-            char =  0
+            char = 0
             if braille[0] == 1:
                 char += 1
             if braille[1] == 1:
@@ -114,15 +118,13 @@ class MusicBraille(object):
             print(charchr, "sent")
             time.sleep(2)
 
-
-    def run(self):
-        MusicBraille.Pitch2Notes(22)
+    def run(self, serial=True):
         self.GetNotesFromMidi()
-        print "hello"
         self.Notes2Braile()
-        self.SendData2Arduino()
+        if serial:
+            self.SendData2Arduino()
 
 
 if __name__ == "__main__":
     braille = MusicBraille("twinkle_twinkle.mid")
-    braille.run()
+    braille.run(serial=False)
