@@ -186,15 +186,13 @@ class MusicBraille(object):
     def SendData2Arduino(self):
         # Build commmunication between Arduino and Python
         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-        time.sleep(1)
+        time.sleep(5)
         braille = []
 
         for note in self.notes.values():
             braille = note.pitch_braille + note.rythmn_braille
             #print(braille)
 
-            brailleone = braille[:len(braille) / 2]
-            brailletwo = braille[len(braille) / 2:]
             counter = 0
 
             while counter < len(braille):
@@ -208,17 +206,19 @@ class MusicBraille(object):
                 if braillesplit[2] == 1:
                     char += 4
                 counter += 3
-                print(char)
+                #print(char)
 
+                charstr = str(char)
+                print(charstr)
 
-
-            # charchr = str(char)
-            # print(charchr)
-            #
-            # ser.flush()
-            # ser.write(charchr)
-            # print(charchr, "sent")
-            # time.sleep(2)
+                ser.flush()
+                ser.write(charstr)
+                print(charstr, "sent")
+                time.sleep(5)
+                chardone = str(8)
+                ser.write(chardone)
+                print(chardone, "sent")
+                time.sleep(2)
 
 
     def run(self, serial=True):
