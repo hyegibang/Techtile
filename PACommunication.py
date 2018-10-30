@@ -2,17 +2,27 @@ import serial, time
 import struct
 
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-time.sleep(1) #give the connection a second to settle
+time.sleep(3) #give the connection a second to settle
 
 def led_one():
-	ser.write('10')
-	print("10 Sent")
+	b = [0,1]
+	ser.write(b)
+	print(b, "Sent")
 	time.sleep(1)
 
 def led_zero():
-	ser.write('01')
-	print("01 Sent")
-	time.sleep(1)
+	ser.write('1')
+
+	print("A Sent")
+	time.sleep(5)
+
+	ser.write('2')
+	print("A Sent")
+	time.sleep(5)
+
+	ser.write('3')
+	print("A Sent")
+	time.sleep(5)
 
 def ardread():
 	rawdata = ser.read()  # read the returning information
@@ -22,7 +32,8 @@ def ardread():
 	print(data)
 	time.sleep(2)
 
-led_one()
+led_zero()
+ardread()
 #
 # for i in range(5):
 # 	led_one()

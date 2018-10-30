@@ -1,6 +1,7 @@
 import midi
 import serial
 import time
+import struct
 
 # Build commmunication between Arduino and Python
 ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
@@ -97,13 +98,21 @@ class MusicBraille(object):
     def SendData2Arduino(self):
         for note in self.notes.values():
             braille = note.braille
-            #command = []
-            #command.append(str(data) for data in braille)
-            ser.write(braille)
-            print(braille, "sent")
-            time.sleep(1.5)
+            char =  0
+            if braille[0] == 1:
+                char += 1
+            if braille[1] == 1:
+                char += 2
+            # if braille[2] == 1:
+            #     char += 4
+            #
+            charchr = str(char)
+            print(charchr)
 
-
+            ser.flush()
+            ser.write(charchr)
+            print(charchr, "sent")
+            time.sleep(2)
 
 
     def run(self):
