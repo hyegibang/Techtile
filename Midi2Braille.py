@@ -14,10 +14,13 @@ class Notes(object):
         self.sharpstatus = False
         self.timeon = time
         self.velocity = velocity
-        self.braille = None
+        self.rythmn_braille = None
+        self.pitch_braille = None
+        self.octv_braille = None
+        self.sharp_braille = None
 
     def Rythmn2Braille(self, BrailleRythmn):
-        self.braille = BrailleRythmn[self.rythmn]
+        self.rythmn_braille = BrailleRythmn[self.rythmn]
 
     def Pitch2Notes(self):
         allnotes = "C C#D D#E F F#G G#A A#B "
@@ -28,6 +31,17 @@ class Notes(object):
         self.note = nt[0]
         if nt[1] == "#":
             self.sharpstatus = True
+
+    def Pitch2Braille(self, BraillePitch):
+        self.Pitch2Notes()
+        self.pitch_braille = BraillePitch[self.note]
+
+    def Octave2Braille(self, BrailleOctave):
+        self.octv_braille = BrailleOctave[self.octv]
+
+    def Accidental2Braille(self, BrailleOctave):
+        if self.sharpstatus:
+            self.sharp_braille = BrailleOctave["#"]
 
 
 class MusicBraille(object):
@@ -71,6 +85,38 @@ class MusicBraille(object):
         BrailleRythmn[1 / 16.0] = [1, 1]
         return BrailleRythmn
 
+    @staticmethod
+    def Pitch2Braille():
+        BraillePitch = dict()
+        BraillePitch["C"] = [1, 0, 1, 1]  # column major
+        BraillePitch["D"] = [1, 0, 0, 1]
+        BraillePitch["E"] = [1, 1, 1, 0]
+        BraillePitch["F"] = [1, 1, 1, 1]
+        BraillePitch["G"] = [1, 1, 0, 1]
+        BraillePitch["A"] = [0, 1, 1, 0]
+        BraillePitch["B"] = [0, 1, 1, 1]
+        return BraillePitch
+
+    @staticmethod
+    def Octave2Braille():
+        BrailleOctave = dict()
+        BrailleOctave[0] = [0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0]
+        BrailleOctave[1] = [0, 0, 0, 1, 0, 0]
+        BrailleOctave[2] = [0, 0, 0, 1, 1, 0]
+        BrailleOctave[3] = [0, 0, 0, 1, 1, 1]
+        BrailleOctave[4] = [0, 0, 0, 0, 1, 0]
+        BrailleOctave[5] = [0, 0, 0, 1, 0, 1]
+        BrailleOctave[6] = [0, 0, 0, 0, 1, 1]
+        BrailleOctave[7] = [0, 0, 0, 0, 0, 1]
+        BrailleOctave[8] = [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]
+        return BrailleOctave
+
+    @staticmethod
+    def Accidental2Braille():
+        BrailleAccidental = dict()
+        BrailleAccidental["#"] = [1, 0, 0, 1, 0, 1]
+        BrailleAccidental["flat"] = [1, 1, 0, 0, 0, 1]
+
     def GetNotesFromMidi(self):
         tick = 0
         noteson = dict()
@@ -91,17 +137,22 @@ class MusicBraille(object):
 
     def Notes2Braile(self):
         BrailleRythmn = MusicBraille.Rythmn2Braille()
+        BraillePitch = MusicBraille.Pitch2Braille()
+        BrailleOctave = MusicBraille.Octave2Braille()
+        BrailleAccidental = MusicBraille.Accidental2Braille()
         for note in self.notes.values():
             note.Rythmn2Braille(BrailleRythmn)
-            note.Pitch2Notes()
-            print note.id, note.pitch, note.rythmn, note.timeon, note.braille, note.octv, note.note, note.sharpstatus
+            note.Pitch2Braille(BraillePitch)
+            note.Octave2Braille(BrailleOctave)
+            note.Accidental2Braille(BrailleAccidental)
+            print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
         # Build commmunication between Arduino and Python
         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
         time.sleep(1)
         for note in self.notes.values():
-            braille = note.braille
+            braille = note.rythmn_braille
             char = 0
             if braille[0] == 1:
                 char += 1
