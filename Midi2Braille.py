@@ -78,6 +78,16 @@ class MusicBraille(object):
                         id_count += 1
                         del noteson[event.data[0]]
 
+    @staticmethod
+    def Pitch2Notes(pitch):
+        allnotes = "C C#D D#E F F#G G#A A#B "
+        octv = pitch/12 - 1
+        start = pitch % 12 * 2
+        end = pitch % 12 * 2 + 2
+        nt = allnotes[start:end]
+        print "Note:", pitch, "octave: :", octv, "note: ", nt
+        return octv, nt
+
     def Notes2Braile(self):
         BrailleRythmn = MusicBraille.Rythmn2Braille()
         for note in self.notes.values():
@@ -97,6 +107,7 @@ class MusicBraille(object):
 
 
     def run(self):
+        MusicBraille.Pitch2Notes(22)
         self.GetNotesFromMidi()
         print "hello"
         self.Notes2Braile()
