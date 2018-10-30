@@ -146,37 +146,59 @@ class MusicBraille(object):
             note.Pitch2Braille(BraillePitch)
             note.Octave2Braille(BrailleOctave)
             note.Accidental2Braille(BrailleAccidental)
-            print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
+            #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
+
+    # def split_list(a_list):
+    #     half = len(a_list)//2
+    #     return a_list[:half], a_list[half:]
 
     def SendData2Arduino(self):
         # Build commmunication between Arduino and Python
         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
         time.sleep(1)
-        for note in self.notes.values():
-            braille = note.rythmn_braille
-            char = 0
-            if braille[0] == 1:
-                char += 1
-            if braille[1] == 1:
-                char += 2
-            # if braille[2] == 1:
-            #     char += 4
-            #
-            charchr = str(char)
-            print(charchr)
+        braille = []
 
-            ser.flush()
-            ser.write(charchr)
-            print(charchr, "sent")
-            time.sleep(2)
+        for note in self.notes.values():
+            braille = note.pitch_braille + note.rythmn_braille
+            #print(braille)
+
+            brailleone = braille[:len(braille) / 2]
+            brailletwo = braille[len(braille) / 2:]
+            counter = 0
+
+            while counter < len(braille):
+                braillesplit = [braille[counter], braille[counter + 1], braille[counter + 2]]
+                print(braillesplit)
+                char = 0
+                if braillesplit[0] == 1:
+                    char += 1
+                if braillesplit[1] == 1:
+                    char += 2
+                if braillesplit[2] == 1:
+                    char += 4
+                counter += 3
+                print(char)
+
+
+
+            # charchr = str(char)
+            # print(charchr)
+            #
+            # ser.flush()
+            # ser.write(charchr)
+            # print(charchr, "sent")
+            # time.sleep(2)
+
 
     def run(self, serial=True):
         self.GetNotesFromMidi()
         self.Notes2Braile()
+        print("Hello")
         if serial:
+            print("detectSerial")
             self.SendData2Arduino()
 
 
 if __name__ == "__main__":
     braille = MusicBraille("twinkle_twinkle.mid")
-    braille.run(serial=False)
+    braille.run(serial=True)
