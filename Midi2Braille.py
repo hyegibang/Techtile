@@ -114,8 +114,9 @@ class MusicBraille(object):
     @staticmethod
     def Accidental2Braille():
         BrailleAccidental = dict()
-        BrailleAccidental["#"] = [1, 0, 0, 1, 0, 1]
-        BrailleAccidental["flat"] = [1, 1, 0, 0, 0, 1]
+        BrailleAccidental["#"] = [1,0,0,1,0,1]
+        BrailleAccidental["flat"] = [1,1,0,0,0,1]
+        BrailleAccidental["natural"] = [1,0,0,0,0,1]
 
     def GetNotesFromMidi(self):
         tick = 0
