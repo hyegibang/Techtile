@@ -15,12 +15,21 @@ class Notes(object):
         self.timeon = time
         self.velocity = velocity
         self.rythmn_braille = None
+        self.rythmn_value_braille = None
         self.pitch_braille = None
         self.octv_braille = None
         self.sharp_braille = None
 
     def Rythmn2Braille(self, BrailleRythmn):
         self.rythmn_braille = BrailleRythmn[self.rythmn]
+
+    def RythmnValue2Braille(self, BrailleRythmnValue):
+        if self.rythmn >= 0.125:
+            self.rythmn_value_braille = BrailleRythmnValue["large"]
+        elif 1 / 256.0 < self.rythmn <= 1 / 16.0:
+            self.rythmn_value_braille = BrailleRythmnValue["small"]
+        else:
+            self.rythmn_value_braille = BrailleRythmnValue["256"]
 
     def Pitch2Notes(self):
         allnotes = "C C#D D#E F F#G G#A A#B "
@@ -112,11 +121,33 @@ class MusicBraille(object):
         return BrailleOctave
 
     @staticmethod
+    def RythmnValue2Braille():
+        BrailleRythmnValue = dict()
+        BrailleRythmnValue["small"] = [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+        BrailleRythmnValue["large"] = [0, 0, 0, 1, 1, 0, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+        BrailleRythmnValue["256"] = [0, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0]
+        return BrailleRythmnValue
+
+    @staticmethod
     def Accidental2Braille():
         BrailleAccidental = dict()
-        BrailleAccidental["#"] = [1,0,0,1,0,1]
-        BrailleAccidental["flat"] = [1,1,0,0,0,1]
-        BrailleAccidental["natural"] = [1,0,0,0,0,1]
+        BrailleAccidental["#"] = [1, 0, 0, 1, 0, 1]
+        BrailleAccidental["flat"] = [1, 1, 0, 0, 0, 1]
+        BrailleAccidental["natural"] = [1, 0, 0, 0, 0, 1]
+        return BrailleAccidental
+
+    @staticmethod
+    def Rests2Braille():
+        BrailleRest = dict()
+        BrailleRest[0.25] = [1, 1, 1, 0, 0, 1]
+        BrailleRest[0.125] = [1, 0, 1, 1, 0, 1]
+        BrailleRest[0.5] = [1, 0, 1, 0, 0, 1]
+        BrailleRest[1.0] = [1, 0, 1, 1, 0, 0]
+        BrailleRest[1 / 64.0] = [1, 1, 1, 0, 0, 1]
+        BrailleRest[1 / 128.0] = [1, 0, 1, 1, 0, 1]
+        BrailleRest[1 / 32.0] = [1, 0, 1, 0, 0, 1]
+        BrailleRest[1 / 16.0] = [1, 0, 1, 1, 0, 0]
+        return BrailleRest
 
     def GetNotesFromMidi(self):
         tick = 0
