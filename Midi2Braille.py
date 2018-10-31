@@ -172,11 +172,13 @@ class MusicBraille(object):
         BraillePitch = MusicBraille.Pitch2Braille()
         BrailleOctave = MusicBraille.Octave2Braille()
         BrailleAccidental = MusicBraille.Accidental2Braille()
+        BrailleRythmnValue = MusicBraille.RythmnValue2Braille()
         for note in self.notes.values():
             note.Rythmn2Braille(BrailleRythmn)
             note.Pitch2Braille(BraillePitch)
             note.Octave2Braille(BrailleOctave)
             note.Accidental2Braille(BrailleAccidental)
+            note.RythmnValue2Braille(BrailleRythmnValue)
             #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
@@ -191,6 +193,9 @@ class MusicBraille(object):
             braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
             #print("after" , braillenote)
             fullbraille = note.octv_braille + braillenote
+            if note.sharp_status:
+                fullbraille = note.sharp_braille + fullbraille
+            fullbraille = note.rythmn_value_braille + fullbraille
             print(fullbraille)
 
             counter = 0
@@ -202,8 +207,6 @@ class MusicBraille(object):
             time.sleep(5)
 
             while counter < len(fullbraille):
-                braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
-                print(braillesplit)
                 char = 0
                 if braillesplit[0] == 1:
                     char += 1
