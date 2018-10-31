@@ -179,10 +179,6 @@ class MusicBraille(object):
             note.Accidental2Braille(BrailleAccidental)
             #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
-    # def split_list(a_list):
-    #     half = len(a_list)//2
-    #     return a_list[:half], a_list[half:]
-
     def SendData2Arduino(self):
         # Build commmunication between Arduino and Python
         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
@@ -190,13 +186,23 @@ class MusicBraille(object):
         braille = []
 
         for note in self.notes.values():
-            braille = note.pitch_braille + note.rythmn_braille
-            #print(braille)
+            braillenote = note.pitch_braille + note.rythmn_braille
+            #print("previous", braillenote)
+            braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
+            #print("after" , braillenote)
+            fullbraille = note.octv_braille + braillenote
+            print(fullbraille)
 
             counter = 0
+            newbraille = str(8)
 
-            while counter < len(braille):
-                braillesplit = [braille[counter], braille[counter + 1], braille[counter + 2]]
+            ser.flush()
+            ser.write(newbraille)
+            print("newbraille",newbraille, "sent")
+            time.sleep(5)
+
+            while counter < len(fullbraille):
+                braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
                 print(braillesplit)
                 char = 0
                 if braillesplit[0] == 1:
@@ -206,7 +212,7 @@ class MusicBraille(object):
                 if braillesplit[2] == 1:
                     char += 4
                 counter += 3
-                #print(char)
+               #print(char)
 
                 charstr = str(char)
                 print(charstr)
@@ -215,9 +221,10 @@ class MusicBraille(object):
                 ser.write(charstr)
                 print(charstr, "sent")
                 time.sleep(5)
-                chardone = str(8)
+
+                chardone = str(0)
                 ser.write(chardone)
-                print(chardone, "sent")
+                print("chardone", chardone, "sent")
                 time.sleep(2)
 
 

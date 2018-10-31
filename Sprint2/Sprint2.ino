@@ -26,12 +26,7 @@ void loop() {
       serialInt = Serial.read();
       switch(serialInt){
         case '0': // 0 0 0 
-          noPunch(); 
-          movePaper(); 
-          noPunch(); 
-          movePaper(); 
-          noPunch(); 
-          movePaper(); 
+          moveSol();
           break;
          
         case '1': // 1 0 0 
@@ -97,6 +92,7 @@ void loop() {
           break;
 
         case '8':
+          moveSol();
           moveSol();
           break;
      }
