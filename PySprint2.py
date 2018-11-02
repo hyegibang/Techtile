@@ -187,13 +187,13 @@ class MusicBraille(object):
         # time.sleep(5)
 
         for note in self.notes.values():
-            braillenote = note.pitch_braille + note.rythmn_braille
-            braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
-            fullbraille = note.octv_braille + note.rythmn_value_braille + braillenote
+            braillenote = note.rythmn_braille
+            # braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
+            # fullbraille = note.octv_braille + note.rythmn_value_braille + braillenote
 
-            if note.sharpstatus:
-                fullbraille = note.sharp_braille + fullbraille
-            print(fullbraille)
+            # if note.sharpstatus:
+            #     fullbraille = note.sharp_braille + fullbraille
+            print(braillenote)
 
             counter = 0
 
@@ -201,22 +201,23 @@ class MusicBraille(object):
 
             MusicBraille.sendwrite(newbraille)
 
-            while counter < len(fullbraille):
-                braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
+            while counter < len(braillenote):
+                # braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
                 char = 0
-                print(braillesplit)
+                print(braillenote)
 
-                if braillesplit[0] == 1:
+                if braillenote[0] == 1:
                     char += 1
-                if braillesplit[1] == 1:
+                if braillenote[1] == 1:
                     char += 2
-                if braillesplit[2] == 1:
-                    char += 4
 
-                counter += 3
+                # if braillenote[2] == 1:
+                #     char += 4
 
-                if counter % 6 == 0:
-                    print("new braillle")
+                # counter += 3
+                #
+                # if counter % 6 == 0:
+                #     print("new braillle")
 
 
                 charstr = str(char)
