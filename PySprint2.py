@@ -193,13 +193,13 @@ class MusicBraille(object):
 
             # if note.sharpstatus:
             #     fullbraille = note.sharp_braille + fullbraille
-            print(braillenote)
 
             counter = 0
 
             newbraille = str(8) # send indicator that new note is being identified
-
             MusicBraille.sendwrite(newbraille)
+            #print(braillenote)
+
 
             while counter < len(braillenote):
                 # braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
@@ -208,6 +208,7 @@ class MusicBraille(object):
 
                 if braillenote[0] == 1:
                     char += 1
+
                 if braillenote[1] == 1:
                     char += 2
 
@@ -230,10 +231,11 @@ class MusicBraille(object):
     @classmethod
     def sendwrite(self, character):
         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        time.sleep(3)
         ser.flush()
         ser.write(character)
         print(character, "sent")
-        time.sleep(5)
+        time.sleep(3)
 
     def run(self, serial=True):
         self.GetNotesFromMidi()
