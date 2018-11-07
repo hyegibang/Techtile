@@ -2,7 +2,10 @@ from os import listdir
 from os.path import isfile, join
 import pyttsx3
 
-mypath = "/home/hyegibang/Documents/Techtile/MidiFiles/"
+import math
+import time
+
+mypath = "/home/pi/Desktop/Techtile/MidiFiles/"
 
 engine = pyttsx3.init()
 rate = engine.getProperty('rate')
