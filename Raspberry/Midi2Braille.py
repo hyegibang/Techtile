@@ -179,71 +179,73 @@ class MusicBraille(object):
             note.Octave2Braille(BrailleOctave)
             note.Accidental2Braille(BrailleAccidental)
             note.RythmnValue2Braille(BrailleRythmnValue)
-            #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
+            # print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
         # # Build commmunication between Arduino and Python
-        # ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-        # time.sleep(5)
+         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+         time.sleep(5)
 
-        for note in self.notes.values():
-            done = 1
-            braillenote = note.rythmn_braille
-            # braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
-            # fullbraille = note.octv_braille + note.rythmn_value_braille + braillenote
+         for note in self.notes.values():
+            fullbraille = note.octv_braille + note.rythmn_value_braille + note.pitch_braille  + note.rythmn_braille
+            if note.sharpstatus:
+                fullbraille = note.sharp_braille + fullbraille
 
-            # if note.sharpstatus:
-            #     fullbraille = note.sharp_braille + fullbraille
+            n = 6
+            for i in range(0, len(fullbraille), n):
+                onebraille = fullbraille[i: i + n]
+                print("original" , onebraille)
+                onebraille[3], onebraille[5] = onebraille[5], onebraille[3]
+                print("after" , onebraille)
 
-            counter = 0
+                counter =0
 
-            newbraille = str(8) # send indicator that new note is being identified
-            MusicBraille.sendwrite(newbraille)
-            #print(braillenote)
+                while counter < len(onebraille):
+                    braillesplit = [onebraille[counter], onebraille[counter + 1], onebraille[counter + 2]]
+                    char = 0
+                    print(braillesplit)
 
+                    if braillesplit[0] == 1:
+                        char += 1
 
-            while counter < len(braillenote):
-                # braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
-                char = 0
-                print(braillenote)
+                    if braillesplit[1] == 1:
+                        char += 2
 
-                if braillenote[0] == 1:
-                    char += 1
+                    if braillesplit[2] == 1:
+                        char += 4
 
-                if braillenote[1] == 1:
-                    char += 2
+                    counter +=3
 
-                # if braillenote[2] == 1:
-                #     char += 4
+                    charstr = str(char)
+                    MusicBraille.sendwrite(charstr)
 
-                # counter += 3
-                #
-                # if counter % 6 == 0:
-                #     print("new braillle")
+                    chardone = str(0)  # next column indicator - moves gantry
+                    MusicBraille.sendwrite(chardone)
 
 
-                charstr = str(char)
-                MusicBraille.sendwrite(charstr)
+                newbrailleindi = str(8)  # send indicator that new note is being identified
+                MusicBraille.sendwrite(newbrailleindi)
 
-                chardone = str(0) # next column indicator
-                MusicBraille.sendwrite(chardone)
 
-        return done = 2
-
+    def initcommunication(self, port ):
+        ser = serial.Serial(port, 9600, timeout= .1)
+        time.sleep(3)
+        return ser
 
     @classmethod
     def sendwrite(self, character):
-        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-        time.sleep(3)
-        ser.flush()
+        # ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        # time.sleep(3)
+        # ser.flush()
         ser.write(character)
         print(character, "sent")
-        time.sleep(3)
+        time.sleep(1)
 
     def run(self, serial=True):
         self.GetNotesFromMidi()
         self.Notes2Braile()
         print("Hello")
+        #self.initcommunication('/dev/ttyACM0')
         if serial:
             print("detectSerial")
             self.SendData2Arduino()

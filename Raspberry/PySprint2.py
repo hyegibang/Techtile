@@ -187,7 +187,6 @@ class MusicBraille(object):
         # time.sleep(5)
 
         for note in self.notes.values():
-            done = 1
             braillenote = note.rythmn_braille
             # braillenote[3], braillenote[5] = braillenote[5], braillenote[3]
             # fullbraille = note.octv_braille + note.rythmn_value_braille + braillenote
@@ -227,8 +226,6 @@ class MusicBraille(object):
 
                 chardone = str(0) # next column indicator
                 MusicBraille.sendwrite(chardone)
-
-        return done = 2
 
 
     @classmethod
