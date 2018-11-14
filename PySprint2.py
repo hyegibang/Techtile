@@ -1,3 +1,4 @@
+
 import midi
 import serial
 import time
@@ -185,6 +186,8 @@ class MusicBraille(object):
         # # Build commmunication between Arduino and Python
         # ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
         # time.sleep(5)
+        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        time.sleep(3)
 
         for note in self.notes.values():
             braillenote = note.rythmn_braille
@@ -196,15 +199,20 @@ class MusicBraille(object):
 
             counter = 0
 
-            newbraille = str(8) # send indicator that new note is being identified
-            MusicBraille.sendwrite(newbraille)
-            #print(braillenote)
+            print("new")
+            print(braillenote)
+            #
+            # char = 3
+            # MusicBraille.sendwrite(str(char))
+
+            newbraille = str(8)  # send indicator that new note is being identified
+            MusicBraille.sendwrite(newbraille, ser)
 
 
             while counter < len(braillenote):
+                #print(len(braillenote))
                 # braillesplit = [fullbraille[counter], fullbraille[counter + 1], fullbraille[counter + 2]]
                 char = 0
-                print(braillenote)
 
                 if braillenote[0] == 1:
                     char += 1
@@ -215,27 +223,24 @@ class MusicBraille(object):
                 # if braillenote[2] == 1:
                 #     char += 4
 
-                # counter += 3
+                counter += 3
                 #
                 # if counter % 6 == 0:
                 #     print("new braillle")
 
 
                 charstr = str(char)
-                MusicBraille.sendwrite(charstr)
+                MusicBraille.sendwrite(charstr, ser)
 
-                chardone = str(0) # next column indicator
-                MusicBraille.sendwrite(chardone)
-
+                # chardone = str(0) # next column indicator
+                # MusicBraille.sendwrite(chardone)
 
     @classmethod
-    def sendwrite(self, character):
-        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-        time.sleep(3)
+    def sendwrite(self, character, ser):
         ser.flush()
         ser.write(character)
         print(character, "sent")
-        time.sleep(3)
+        time.sleep(2)
 
     def run(self, serial=True):
         self.GetNotesFromMidi()
@@ -247,5 +252,5 @@ class MusicBraille(object):
 
 
 if __name__ == "__main__":
-    braille = MusicBraille("twinkle_twinkle.mid")
+    braille = MusicBraille("mary.mid")
     braille.run(serial=True)

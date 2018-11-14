@@ -4,6 +4,8 @@
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
 Adafruit_DCMotor *Motorone = AFMS.getMotor(1);
 Adafruit_DCMotor *Motortwo = AFMS.getMotor(2);
+Adafruit_StepperMotor *stepper = AFMS.getStepper(200, 2);
+
 
 char serialData ; 
 int pinRed = 12; // motor
@@ -21,6 +23,9 @@ void setup() {
   pinMode(pinYellow, OUTPUT);
   pinMode(pinBlue,OUTPUT);
   pinMode(sol,OUTPUT);
+
+  stepper -> setSpeed(10); // 10 rpm 
+
  
 }
 void loop() {
@@ -48,7 +53,7 @@ void loop() {
           
         case '3': // 1 1 
           Punch(); 
-          moveSol(); 
+          moveSSol(); 
           Punch(); 
           moveSol(); 
           break;
@@ -100,29 +105,28 @@ void movePaper(){
   digitalWrite(pinBlue,HIGH);
   delay(100);
   digitalWrite(pinBlue,LOW);
-  delay(500);
+  delay(200);
 }
 
 void noPunch(){
   digitalWrite(sol,LOW);  
   digitalWrite(pinRed,LOW);
-  delay(500);
+  delay(200);
 }
 
 void Punch(){
   digitalWrite(sol,HIGH);
-  digitalWrite(pinRed,HIGH);
-
-  delay(100);
+  delay(200);
   digitalWrite(sol,LOW); 
-  digitalWrite(pinRed,LOW);
-
-  delay(500);
+  delay(300);
 }
 
 void moveSol(){
-  digitalWrite(pinYellow,HIGH); 
-  delay(100);
-  digitalWrite(pinYellow,LOW); 
-  delay(100);
+  stepper->step(5, FORWARD, SINGLE); 
+  delay(200);
+}
+
+void moveSSol(){
+  stepper->step(8, FORWARD, SINGLE); 
+  delay(200);
 }

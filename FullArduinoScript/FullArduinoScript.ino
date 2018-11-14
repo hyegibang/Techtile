@@ -2,8 +2,8 @@
 #include <Adafruit_MotorShield.h>
 #include "utility/Adafruit_MS_PWMServoDriver.h"
 Adafruit_MotorShield AFMS = Adafruit_MotorShield();
-Adafruit_DCMotor *Motorone = AFMS.getMotor(1);
-Adafruit_DCMotor *Motortwo = AFMS.getMotor(2);
+Adafruit_StepperMotor *stepper = AFMS.getStepper(200, 2);
+
 
 char serialData ; 
 int pinRed = 12; // motor
@@ -22,6 +22,7 @@ void setup() {
   pinMode(pinBlue,OUTPUT);
 
   pinMode(sol,OUTPUT);
+  stepper -> setSpeed(10); // 10 rpm 
  
 }
 void loop() {
@@ -41,7 +42,7 @@ void loop() {
           movePaper(); 
           break;
          
-        case '2':
+        case '2': // 0 1 0 
           noPunch(); 
           movePaper(); 
           Punch(); 
@@ -127,8 +128,13 @@ void Punch(){
 }
 
 void moveSol(){
-  digitalWrite(pinGreen,HIGH); 
-  delay(100);
-  digitalWrite(pinGreen,LOW); 
-  delay(100);
+  stepper->step(4, FORWARD, SINGLE); 
+  delay(500);
+}
+
+void movecolumnSol(){
+  stepper->step(7, FORWARD, SINGLE); 
+  delay(500);
+}
+  
 }
