@@ -7,9 +7,8 @@ Adafruit_DCMotor *Motortwo = AFMS.getMotor(2);
 
 char serialData ; 
 int pinRed = 12; // motor
-int pinYellow = 5; // solenoid
-int pinBlue = 11; // paper 
-int sol = 7; 
+int pinYellow = 11;
+int pinGreen = 10; // paper
 
 int serialInt;
 
@@ -19,38 +18,42 @@ void setup() {
   
   pinMode(pinRed, OUTPUT);
   pinMode(pinYellow, OUTPUT);
-  pinMode(pinBlue,OUTPUT);
-  pinMode(sol,OUTPUT);
+  pinMode(pinGreen,OUTPUT);
  
 }
 void loop() {
   if(Serial.available() > 0) {
       serialInt = Serial.read();
       switch(serialInt){
-        case '0': // 0 0 
-          moveSol();
+        case '0': // 0 0 0 
           moveSol();
           break;
          
-        case '1': // 1 0 
+        case '1': // 1 0 0 
           Punch(); 
-          moveSol(); 
+          movePaper(); 
           noPunch(); 
-          moveSol(); 
+          movePaper(); 
+          noPunch(); 
+          movePaper(); 
           break;
          
-        case '2': // 0 1 
+        case '2':
           noPunch(); 
-          moveSol(); 
+          movePaper(); 
           Punch(); 
-          moveSol(); 
+          movePaper(); 
+          noPunch(); 
+          movePaper(); 
           break;
           
-        case '3': // 1 1 
+        case '3':
           Punch(); 
-          moveSol(); 
+          movePaper(); 
           Punch(); 
-          moveSol(); 
+          movePaper(); 
+          noPunch(); 
+          movePaper(); 
           break;
             
         case '4':
@@ -97,26 +100,21 @@ void loop() {
 }
 
 void movePaper(){
-  digitalWrite(pinBlue,HIGH);
+  digitalWrite(pinGreen,HIGH);
   delay(100);
-  digitalWrite(pinBlue,LOW);
+  digitalWrite(pinGreen,LOW);
   delay(500);
 }
 
 void noPunch(){
-  digitalWrite(sol,LOW);  
   digitalWrite(pinRed,LOW);
   delay(500);
 }
 
 void Punch(){
-  digitalWrite(sol,HIGH);
   digitalWrite(pinRed,HIGH);
-
   delay(100);
-  digitalWrite(sol,LOW); 
-  digitalWrite(pinRed,LOW);
-
+  digitalWrite(pinRed,LOW); 
   delay(500);
 }
 
