@@ -18,8 +18,6 @@ engine.setProperty('voice', 'english+f1') # or voices[13].id
 
 onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-for i in range(len(onlyfiles)):
-    songtitle = onlyfiles[i]
-    print(songtitle[:-4])
-    engine.say(songtitle[:-4])
-    engine.runAndWait()
+
+engine.say(onlyfiles[2])
+engine.runAndWait()
