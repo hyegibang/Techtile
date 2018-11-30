@@ -2,6 +2,7 @@ import midi
 import serial
 import time
 import struct
+from serial import Serial
 
 
 class Notes(object):
@@ -228,12 +229,13 @@ class MusicBraille(object):
                 chardone = str(0) # next column indicator
                 MusicBraille.sendwrite(chardone)
 
-        return done = 2
+        done = 2
+        return done
 
 
     @classmethod
     def sendwrite(self, character):
-        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        ser = serial.Serial('COM15', 9600, timeout=.1)
         time.sleep(3)
         ser.flush()
         ser.write(character)

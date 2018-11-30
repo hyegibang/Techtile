@@ -46,6 +46,7 @@ class Notes(object):
         self.pitch_braille = BraillePitch[self.note]
 
     def Octave2Braille(self, BrailleOctave):
+        print(BrailleOctave[self.octv])
         self.octv_braille = BrailleOctave[self.octv]
 
     def Accidental2Braille(self, BrailleOctave):
@@ -183,7 +184,7 @@ class MusicBraille(object):
 
     def SendData2Arduino(self):
         # # Build commmunication between Arduino and Python
-         ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+         ser = serial.Serial('COM15', 9600, timeout=.1)
          time.sleep(5)
 
          for note in self.notes.values():
