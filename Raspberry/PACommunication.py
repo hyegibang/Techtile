@@ -2,6 +2,8 @@ import midi
 import serial
 import time
 import struct
+from os import listdir
+from os.path import isfile, join
 from serial import Serial
 
 
@@ -54,10 +56,14 @@ class Notes(object):
             self.sharp_braille = BrailleOctave["#"]
 
 
-class MusicBraille(object):
+class MusicBraille():
 
-    def __init__(self, filename):
-        self.pattern = midi.read_midifile(filename)
+    def __init__(self, selected):
+        self.path = mypath = "C:/Users/hbang/Documents/Techtile/MidiFiles/"
+        self.files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
+        #print(self.files)
+        self.pattern = midi.read_midifile(self.files[selected])
+        #print(self.pattern)
         self.notes = dict()
         self.resolution = self.pattern.resolution
 
@@ -183,6 +189,10 @@ class MusicBraille(object):
             #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
+        ser = serial.Serial('COM15', 9600, timeout=.1)
+        time.sleep(3)
+        ser.flush()
+
         for note in self.notes.values()[0:1]:
             fullbraille = note.octv_braille + note.rythmn_value_braille + note.pitch_braille  + note.rythmn_braille
             if note.sharpstatus:
@@ -191,9 +201,9 @@ class MusicBraille(object):
             n = 6
             for i in range(0, len(fullbraille), n):
                 onebraille = fullbraille[i: i + n]
-                print("original" , onebraille)
+                #print("original" , onebraille)
                 onebraille[3], onebraille[5] = onebraille[5], onebraille[3]
-                print("after" , onebraille)
+                #print("after" , onebraille)
 
                 counter = 0
 
@@ -214,26 +224,34 @@ class MusicBraille(object):
                     counter +=3
 
                     charstr = str(char)
-                    MusicBraille.sendwrite(charstr)
+                    ser.write(charstr)
+                    print(charstr, "sent")
+                    time.sleep(2)
 
                     chardone = str(8)  # next column indicator - moves gantry
-                    MusicBraille.sendwrite(chardone)
+                    ser.write(chardone)
+                    print(chardone, "sent")
+                    time.sleep(2)
 
                 newbrailleindi = str(9)  # send indicator that new note is being identified
-                MusicBraille.sendwrite(newbrailleindi)
+                ser.write(newbrailleindi)
+                print(newbrailleindi, "sent")
+                time.sleep(2)
+        ser.close()
+        print("ser-close")
 
 
-
-    def initcommunication(self, port ):
+    def initcommunication(self, port):
         ser = serial.Serial(port, 9600, timeout= .1)
         time.sleep(3)
+        print("he",ser)
         return ser
 
     @classmethod
-    def sendwrite(self, character):
-        ser = serial.Serial('COM15', 9600, timeout=.1)
-        time.sleep(3)
-        ser.flush()
+    def sendwrite(self, character,ser):
+        # ser = serial.Serial('COM15', 9600, timeout=.1)
+        # time.sleep(3)
+        # ser.flush()
         ser.write(character)
         print(character, "sent")
         time.sleep(2)
@@ -242,12 +260,12 @@ class MusicBraille(object):
         self.GetNotesFromMidi()
         self.Notes2Braile()
         print("Hello")
-        #self.initcommunication('/dev/ttyACM0')
         if serial:
             print("detectSerial")
             self.SendData2Arduino()
 
 
 if __name__ == "__main__":
-    braille = MusicBraille("twinkle_twinkle.mid")
-    braille.run(serial=True)
+    selected = 5
+    braille = MusicBraille(selected)
+    braille.run(serial=False)

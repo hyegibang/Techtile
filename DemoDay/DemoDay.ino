@@ -10,6 +10,7 @@ const int MOTOR_X_DIR_PIN = 5;
 const int MOTOR_Y_DIR_PIN = 6;
 const int STEPPERS_ENABLE_PIN = 8;
 int SOLENOID_PIN = 11;
+int LED = 13; 
 
 //
 // create the stepper motor objects
@@ -23,13 +24,12 @@ int solmovement = 100;
 
 //
 char serialInt = '7';
-int serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8};
+int serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,9};
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
   pinMode(SOLENOID_PIN, OUTPUT);
-  pinMode(7, OUTPUT);
-  digitalWrite(7, HIGH);
+  pinMode(LED, OUTPUT);
   Serial.begin(9600);
 
 
@@ -48,12 +48,16 @@ void setup() {
 }
 
 void loop() {
-      for (int i = 0; i < 12; i++){  
+    receive();   
+    for (int i = 0; i < sizeof(serialIntA); i++){
       Serial.println(serialIntA[i]);
       delay(1000);
      switch(serialIntA[i]){
        case 0: // 0 0 0 
-          
+          digitalWrite(LED,HIGH);
+          delay(100); 
+          digitalWrite(LED,LOW);
+          delay(300);
           Punch();
           movePaper(papermovement);
           Punch();
@@ -132,6 +136,20 @@ void loop() {
     }
   }
 }
+
+void receive(){
+  if(Serial.available()) {
+        serialInt = Serial.read();         
+        for (int j = 0; j < 12; j++){
+          serialIntA[j] = serialInt;
+          Serial.print(serialIntA[j]);
+          if (serialIntA[j] = serialIntA[12]){
+            Serial.end();
+          }
+        }
+  }
+}
+
 void movePaper(int papermovement) {
   MovePaperStepper(200,200,papermovement);
   delay(100);
