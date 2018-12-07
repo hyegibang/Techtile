@@ -10,6 +10,8 @@ const int MOTOR_X_DIR_PIN = 5;
 const int MOTOR_Y_DIR_PIN = 6;
 const int STEPPERS_ENABLE_PIN = 8;
 int SOLENOID_PIN = 11;
+int numcell = 14;
+int onelinesteps = - numcell*(50+50+70); //number of steps for gantry to print one line
 
 //
 // create the stepper motor objects
@@ -17,13 +19,14 @@ int SOLENOID_PIN = 11;
 SpeedyStepper stepperX;
 SpeedyStepper stepperY;
 
-//char serialInt; 
-int papermovement = -100; 
-int solmovement = 100; 
+//char serialInt;
+int papermovement = -100;
+int solmovement = 100;
 
 //
 char serialInt = '7';
-int serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8};
+int serialIntA[] = {7, 8, 2, 8, 9};
+int printmode = 1;
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
@@ -48,19 +51,36 @@ void setup() {
 }
 
 void loop() {
+<<<<<<< HEAD
+  if (Serial.available()) {
+    serialInt = Serial.read();
+    for (int j = 0; j < sizeof(serialIntA); j++) {
+      serialIntA[j] = serialInt;
+      Serial.print(serialIntA[j]);
+    }
+  }
+  int counter = sizeof(serialIntA); // keep track of how much printed
+  if (printmode != 0) {
+    for (int i = 0; i < sizeof(serialIntA); i++) {
+      Serial.println(serialIntA[i]);
+      delay(1000);
+      switch (serialIntA[i]) {
+        case 0: // 0 0 0
+=======
       for (int i = 0; i < 12; i++){  
       Serial.println(serialIntA[i]);
       delay(1000);
      switch(serialIntA[i]){
        case 0: // 0 0 0 
           
+>>>>>>> fb7286e53bbcb1a2ab15b3e812cb79600ef4707e
           Punch();
           movePaper(papermovement);
           Punch();
           movePaper(papermovement);
-          Punch(); 
+          Punch();
           break;
-    
+
         case 1: // 1 0 0
           Punch();
           movePaper(papermovement);
@@ -68,23 +88,23 @@ void loop() {
           movePaper(papermovement);
           noPunch();
           break;
-    
-        case 2: // 0 1 0 
+
+        case 2: // 0 1 0
           noPunch();
           movePaper(papermovement);
           Punch();
           movePaper(papermovement);
           noPunch();
           break;
-    
+
         case 3: // 1 1 0
           Punch();
           movePaper(papermovement);
           Punch();
           movePaper(papermovement);
-          noPunch(); 
+          noPunch();
           break;
-    
+
         case 4: // 0 0 1
           noPunch();
           movePaper(papermovement);
@@ -92,7 +112,7 @@ void loop() {
           movePaper(papermovement);
           Punch();
           break;
-    
+
         case 5: // 1 0 1
           Punch();
           movePaper(papermovement);
@@ -100,7 +120,7 @@ void loop() {
           movePaper(papermovement);
           Punch();
           break;
-    
+
         case 6: // 0 1 1
           noPunch();
           movePaper(papermovement);
@@ -108,7 +128,7 @@ void loop() {
           movePaper(papermovement);
           Punch();
           break;
-    
+
         case 7: // 1 1 1
           Punch();
           movePaper(papermovement);
@@ -116,26 +136,44 @@ void loop() {
           movePaper(papermovement);
           Punch();
           break;
-    
+
         case 8: // new column, paper movement go up
           MoveGantryStepper(800, 800, 50);
-          delay(100); 
+          delay(100);
           papermovement = 100;
           break;
-  
-        case 9: // new braille, paper movement go down  
+
+        case 9: // new braille, paper movement go down
           MoveGantryStepper(800, 800, 70);
           delay(100);
           papermovement = -100;
-          break; 
-        
+          break;
+
+      }
+      counter -= 1;
+      if (counter % numcell*5 == 0){
+        newLine();
+        }
+      if(counter == 0){
+        printmode = 0;
+        }
+      Serial.println(printmode);
     }
   }
+
 }
-void movePaper(int papermovement) {
-  MovePaperStepper(200,200,papermovement);
+
+void newLine(){
+  MovePaperStepper(200,200,600);
   delay(100);
-  MovePaperStepper(0,0,0);
+  MoveGantryStepper(800, 800, onelinesteps);
+  delay(200);
+  }
+  
+void movePaper(int papermovement) {
+  MovePaperStepper(200, 200, papermovement);
+  delay(100);
+  MovePaperStepper(0, 0, 0);
   delay(500);
 }
 
