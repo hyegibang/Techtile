@@ -59,7 +59,8 @@ class Notes(object):
 class MusicBraille():
 
     def __init__(self, selected):
-        self.path = mypath = "C:/Users/hbang/Documents/Techtile/MidiFiles/"
+        #self.path = mypath = "C:/Users/hbang/Documents/Techtile/MidiFiles/"
+        self.path = mypath = "/home/pi/Techtile/MidiFiles/"
         self.files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
         #print(self.files)
         self.pattern = midi.read_midifile(self.files[selected])
@@ -189,7 +190,7 @@ class MusicBraille():
             #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
-        ser = serial.Serial('COM15', 9600, timeout=.1)
+        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
         time.sleep(3)
         ser.flush()
 
@@ -266,6 +267,5 @@ class MusicBraille():
 
 
 if __name__ == "__main__":
-    selected = 5
     braille = MusicBraille(selected)
     braille.run(serial=False)
