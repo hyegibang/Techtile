@@ -11,6 +11,7 @@ const int MOTOR_Y_DIR_PIN = 6;
 const int STEPPERS_ENABLE_PIN = 8;
 int SOLENOID_PIN = 11;
 int LED = 13; 
+int printmode = 0; 
 
 //
 // create the stepper motor objects
@@ -24,7 +25,7 @@ int solmovement = 100;
 
 //
 char serialInt = '7';
-int serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,9};
+char serialIntA[] = {};
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
@@ -48,7 +49,10 @@ void setup() {
 }
 
 void loop() {
-    receive();   
+    if(printmode == 0){
+      receive(); 
+    }
+    else if(printmode == 1){
     for (int i = 0; i < sizeof(serialIntA); i++){
       Serial.println(serialIntA[i]);
       delay(1000);
@@ -136,15 +140,18 @@ void loop() {
     }
   }
 }
+    }
 
 void receive(){
   if(Serial.available()) {
         serialInt = Serial.read();         
-        for (int j = 0; j < 12; j++){
+        for (int j = 0; j < sizeof(serialIntA); j++){
           serialIntA[j] = serialInt;
-          Serial.print(serialIntA[j]);
-          if (serialIntA[j] = serialIntA[12]){
+          Serial.print("receive"); Serial.println(serialIntA[j]);
+          if (serialIntA[j] = serialIntA[sizeof(serialIntA)]){
             Serial.end();
+            printmode = 1;
+            Serial.println(printmode);
           }
         }
   }
