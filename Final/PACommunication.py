@@ -58,15 +58,10 @@ class Notes(object):
 
 class MusicBraille():
 
-    def __init__(self, selected):
-        #self.path = mypath = "C:/Users/hbang/Documents/Techtile/MidiFiles/"
-        self.path = mypath = "/home/pi/Techtile/MidiFiles/"
-        self.files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
-        #print(self.files)
-        self.pattern = midi.read_midifile(self.files[selected])
-        #print(self.pattern)
-        self.notes = dict()
-        self.resolution = self.pattern.resolution
+    def __init__(self, filename):
+            self.pattern = midi.read_midifile(filename)
+            self.notes = dict()
+            self.resolution = self.pattern.resolution
 
     @staticmethod
     def CheckRythmn(timediff, resolution):
@@ -190,9 +185,9 @@ class MusicBraille():
             #print note.id, note.pitch, note.rythmn, note.timeon, note.rythmn_braille, note.octv, note.octv_braille, note.note, note.pitch_braille, note.sharpstatus
 
     def SendData2Arduino(self):
-        ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
-        time.sleep(3)
-        ser.flush()
+        # ser = serial.Serial('/dev/ttyACM0', 9600, timeout=.1)
+        # time.sleep(3)
+        # ser.flush()
 
         for note in self.notes.values()[0:1]:
             fullbraille = note.octv_braille + note.rythmn_value_braille + note.pitch_braille  + note.rythmn_braille
@@ -225,25 +220,25 @@ class MusicBraille():
                     counter +=3
 
                     charstr = str(char)
-                    ser.write(charstr)
+                    #ser.write(charstr)
                     print(charstr, "sent")
                     time.sleep(2)
 
                     chardone = str(8)  # next column indicator - moves gantry
-                    ser.write(chardone)
+                    #ser.write(chardone)
                     print(chardone, "sent")
                     time.sleep(2)
 
                 newbrailleindi = str(9)  # send indicator that new note is being identified
-                ser.write(newbrailleindi)
+                #ser.write(newbrailleindi)
                 print(newbrailleindi, "sent")
                 time.sleep(2)
-        ser.close()
+        #ser.close()
         print("ser-close")
 
 
     def initcommunication(self, port):
-        ser = serial.Serial(port, 9600, timeout= .1)
+        #ser = serial.Serial(port, 9600, timeout= .1)
         time.sleep(3)
         print("he",ser)
         return ser
@@ -267,5 +262,5 @@ class MusicBraille():
 
 
 if __name__ == "__main__":
-    braille = MusicBraille(selected)
-    braille.run(serial=False)
+    braille = MusicBraille("silent_night.mid")
+    braille.run(serial=True)

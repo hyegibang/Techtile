@@ -2,10 +2,10 @@ import math
 import time
 from os import listdir
 from os.path import isfile, join
-import pyttsx3
 import Adafruit_CharLCD as LCD
 import midi
 import serial
+
 
 
 from adafruitlcdplate import MenuNode , CharMenuDisplay
@@ -19,8 +19,7 @@ adafruit_char_lcd_plate.set_backlight(True)
 mypath = "/home/pi/Techtile/MidiFiles/"
 files = [f for f in listdir(mypath) if isfile(join(mypath, f))]
 
-
- #  Here we create ten menu nodes
+#  Here we create ten menu nodes
 
 menu_nodes = []
 title= []
@@ -34,11 +33,12 @@ for song in range(len(files)):
 print(title)
 
 while True:
+    ser = serial.Serial('COM15', 9600, timeout=.1)
     menu = CharMenuDisplay(adafruit_char_lcd_plate, menu_nodes, title)
     selected = menu.display()
     print("receive" , selected)
-    braille = MusicBraille(selected)
-    braille.run(serial = True)
-    print("done")
-    
-   
+    ser.write(selected)
+    print(selected, "sent")
+    ser.flush()
+    time.sleep(3)
+    ser.close()

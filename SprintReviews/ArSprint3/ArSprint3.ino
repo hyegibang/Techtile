@@ -29,6 +29,7 @@ int counter_secdig = 0;
 char serialInt = '7';
 char serialIntA[] = {7, 8, 2, 8, 9, 7, 8, 2, 8, 9};
 int printmode = 1;
+int select; 
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
@@ -53,13 +54,32 @@ void setup() {
 }
 
 void loop() {
-  //  if (Serial.available()) {
-  //    serialInt = Serial.read();
-  //    for (int j = 0; j < sizeof(serialIntA); j++) {
-  //      serialIntA[j] = serialInt;
-  //      Serial.print(serialIntA[j]);
-  //    }
-  //  }
+  if (Serial.available()) {
+    select = Serial.read(); 
+    switch(select){
+      case 0: // Adams 
+      serialIntA[] = {0,8,7,8,9,0,8,1,8,9,3,8,1,8,9,2,9,0,8,9,7,8,7,8,9}
+      case 1: // Dancing
+      serialIntA[] = {1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9,7,8,4,8,9}
+      case 2: // Rocky
+      serialIntA[] = {1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9,5,8,7,8,9}
+      case 3: // Snowman
+      serialIntA[] = {0,8,4,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,7,8,5,8,9}
+      case 4: // Summer_love
+      case 5: // happy_birthday
+      serialIntA[] = {0,8,6,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,1,8,4,8,9}
+      case 6:  // mary lamb
+      serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,7,8,1,8,9}
+      case 7: // silent night
+      serialIntA[] = {}
+      case 8: // twinkle twinkle 
+      serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,5,8,5,8,9} 
+
+ 
+      
+    }
+  }
+  
   for (int i = 0; i < sizeof(serialIntA); i++) {
     Serial.println(serialIntA[i]);
     delay(1000);

@@ -10,27 +10,31 @@ const int MOTOR_X_DIR_PIN = 5;
 const int MOTOR_Y_DIR_PIN = 6;
 const int STEPPERS_ENABLE_PIN = 8;
 int SOLENOID_PIN = 11;
-int LED = 13; 
-int printmode = 0; 
-
+int numcell = 14;
+//int onelinesteps = - numcell*(50+50+70); //number of steps for gantry to print one line
+int onelinesteps = 850; //number of steps for gantry to print one line
 //
 // create the stepper motor objects
 //
 SpeedyStepper stepperX;
 SpeedyStepper stepperY;
 
-//char serialInt; 
-int papermovement = -100; 
-int solmovement = 100; 
+//char serialInt;
+int papermovement = -100;
+int solmovement = 100;
+int counter_firstdig = 1;
+int counter_secdig = 0;
 
 //
 char serialInt = '7';
-char serialIntA[] = {};
+char serialIntA[] = {7, 8, 2, 8, 9, 7, 8, 2, 8, 9};
+int printmode = 1;
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
   pinMode(SOLENOID_PIN, OUTPUT);
-  pinMode(LED, OUTPUT);
+  pinMode(7, OUTPUT);
+  digitalWrite(7, HIGH);
   Serial.begin(9600);
 
 
@@ -49,118 +53,122 @@ void setup() {
 }
 
 void loop() {
-    if(printmode == 0){
-      receive(); 
+    if (Serial.available()) {
+      serialInt = Serial.read();
+      
+      }
     }
-    else if(printmode == 1){
-    for (int i = 0; i < sizeof(serialIntA); i++){
-      Serial.println(serialIntA[i]);
-      delay(1000);
-     switch(serialIntA[i]){
-       case 0: // 0 0 0 
-          digitalWrite(LED,HIGH);
-          delay(100); 
-          digitalWrite(LED,LOW);
-          delay(300);
-          Punch();
-          movePaper(papermovement);
-          Punch();
-          movePaper(papermovement);
-          Punch(); 
-          break;
-    
-        case 1: // 1 0 0
-          Punch();
-          movePaper(papermovement);
-          noPunch();
-          movePaper(papermovement);
-          noPunch();
-          break;
-    
-        case 2: // 0 1 0 
-          noPunch();
-          movePaper(papermovement);
-          Punch();
-          movePaper(papermovement);
-          noPunch();
-          break;
-    
-        case 3: // 1 1 0
-          Punch();
-          movePaper(papermovement);
-          Punch();
-          movePaper(papermovement);
-          noPunch(); 
-          break;
-    
-        case 4: // 0 0 1
-          noPunch();
-          movePaper(papermovement);
-          noPunch();
-          movePaper(papermovement);
-          Punch();
-          break;
-    
-        case 5: // 1 0 1
-          Punch();
-          movePaper(papermovement);
-          noPunch();
-          movePaper(papermovement);
-          Punch();
-          break;
-    
-        case 6: // 0 1 1
-          noPunch();
-          movePaper(papermovement);
-          Punch();
-          movePaper(papermovement);
-          Punch();
-          break;
-    
-        case 7: // 1 1 1
-          Punch();
-          movePaper(papermovement);
-          Punch();
-          movePaper(papermovement);
-          Punch();
-          break;
-    
-        case 8: // new column, paper movement go up
-          MoveGantryStepper(800, 800, 50);
-          delay(100); 
-          papermovement = 100;
-          break;
-  
-        case 9: // new braille, paper movement go down  
-          MoveGantryStepper(800, 800, 70);
-          delay(100);
-          papermovement = -100;
-          break; 
-        
-    }
-  }
-}
-    }
+  for (int i = 0; i < sizeof(serialIntA); i++) {
+    Serial.println(serialIntA[i]);
+    delay(1000);
+    switch (serialIntA[i]) {
+      case 0: // 0 0 0
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        break;
 
-void receive(){
-  if(Serial.available()) {
-        serialInt = Serial.read();         
-        for (int j = 0; j < sizeof(serialIntA); j++){
-          serialIntA[j] = serialInt;
-          Serial.print("receive"); Serial.println(serialIntA[j]);
-          if (serialIntA[j] = serialIntA[sizeof(serialIntA)]){
-            Serial.end();
-            printmode = 1;
-            Serial.println(printmode);
-          }
-        }
+      case 1: // 1 0 0
+        Punch();
+        movePaper(papermovement);
+        noPunch();
+        movePaper(papermovement);
+        noPunch();
+        break;
+
+      case 2: // 0 1 0
+        noPunch();
+        movePaper(papermovement);
+        Punch();
+        movePaper(papermovement);
+        noPunch();
+        break;
+
+      case 3: // 1 1 0
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        movePaper(papermovement);
+        noPunch();
+        break;
+
+      case 4: // 0 0 1
+        noPunch();
+        movePaper(papermovement);
+        noPunch();
+        movePaper(papermovement);
+        Punch();
+        break;
+
+      case 5: // 1 0 1
+        Punch();
+        movePaper(papermovement);
+        noPunch();
+        movePaper(papermovement);
+        Punch();
+        break;
+
+      case 6: // 0 1 1
+        noPunch();
+        movePaper(papermovement);
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        break;
+
+      case 7: // 1 1 1
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        movePaper(papermovement);
+        Punch();
+        break;
+
+      case 8: // new column, paper movement go up
+        MoveGantryStepper(800, 800, 50);
+        delay(100);
+        papermovement = 100;
+        break;
+
+      case 9: // new braille, paper movement go down
+        MoveGantryStepper(800, 800, 70);
+        delay(100);
+        papermovement = -100;
+        break;
+
+    }
+    if (counter_firstdig == 9){
+      counter_firstdig = 0;
+      counter_secdig += 1;
+      }
+    else{
+      counter_firstdig +=1;
+      }
+    Serial.print("counter second:"); Serial.println(counter_secdig);
+    Serial.print("counter first:"); Serial.println(counter_firstdig);
+    if (counter_secdig == 7 && counter_firstdig == 0) {
+      newLine();
+      Serial.println("newline");
+      counter_secdig = 0;
+      counter_firstdig = 0;
+    }
   }
+
+}
+
+void newLine() {
+  MovePaperStepper(200, 200, -400);
+  delay(100);
+  MoveGantryStepper(800, 800, -2380);
+  delay(200);
 }
 
 void movePaper(int papermovement) {
-  MovePaperStepper(200,200,papermovement);
+  MovePaperStepper(200, 200, papermovement);
   delay(100);
-  MovePaperStepper(0,0,0);
+  MovePaperStepper(0, 0, 0);
   delay(500);
 }
 
