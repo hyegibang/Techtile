@@ -10,7 +10,7 @@ const int MOTOR_X_DIR_PIN = 5;
 const int MOTOR_Y_DIR_PIN = 6;
 const int STEPPERS_ENABLE_PIN = 8;
 int SOLENOID_PIN = 11;
-int numcell = 14;
+int numcell = 11;
 //int onelinesteps = - numcell*(50+50+70); //number of steps for gantry to print one line
 int onelinesteps = 850; //number of steps for gantry to print one line
 //
@@ -21,15 +21,25 @@ SpeedyStepper stepperY;
 
 //char serialInt;
 int papermovement = -100;
-int solmovement = 100;
+int solmovement = -100;
 int counter_firstdig = 1;
 int counter_secdig = 0;
 
 //
 char serialInt = '7';
-char serialIntA[] = {7, 8, 2, 8, 9, 7, 8, 2, 8, 9};
-int printmode = 1;
-int select; 
+//int serialIntA[25] ;
+int serialIntA[8][25] = { 
+{0,8,7,8,9,0,8,1,8,9,3,8,1,8,9,2,9,0,8,9,7,8,7,8,9},
+{1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9},
+{1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9},
+{0,8,4,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,7,8,5,8,9},
+{0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,5,8,5,8,9},
+{0,8,6,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,1,8,4,8,9},
+{0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,5,8,5,8,9},
+{0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,5,8,5,8,9}
+};
+int rownumber; 
+char select; 
 
 void setup() {
   pinMode(STEPPERS_ENABLE_PIN, OUTPUT);       // be sure to do this
@@ -58,32 +68,29 @@ void loop() {
     select = Serial.read(); 
     switch(select){
       case 0: // Adams 
-      serialIntA[] = {0,8,7,8,9,0,8,1,8,9,3,8,1,8,9,2,9,0,8,9,7,8,7,8,9}
+       rownumber = 0;
       case 1: // Dancing
-      serialIntA[] = {1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9,7,8,4,8,9}
+       rownumber = 1;
       case 2: // Rocky
-      serialIntA[] = {1,8,5,8,9,0,8,6,8,9,0,8,1,8,9,3,8,1,8,9,2,8,0,8,9,5,8,7,8,9}
+       rownumber = 2;
       case 3: // Snowman
-      serialIntA[] = {0,8,4,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,7,8,5,8,9}
+       rownumber = 3;
       case 4: // Summer_love
+       rownumber = 4;
       case 5: // happy_birthday
-      serialIntA[] = {0,8,6,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,1,8,4,8,9}
+       rownumber = 5;
       case 6:  // mary lamb
-      serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,7,8,1,8,9}
+       rownumber = 6;
       case 7: // silent night
-      serialIntA[] = {}
+       rownumber = 7;
       case 8: // twinkle twinkle 
-      serialIntA[] = {0,8,2,8,9,0,8,6,8,9,3,8,1,8,9,2,8,0,8,9,5,8,5,8,9} 
-
- 
-      
+       rownumber = 8;
     }
   }
   
-  for (int i = 0; i < sizeof(serialIntA); i++) {
-    Serial.println(serialIntA[i]);
-    delay(1000);
-    switch (serialIntA[i]) {
+  for (int i = 0; i < 25; i++) {
+    switch (serialIntA[rownumber][i]) {
+      Serial.println(serialIntA[rownumber][i]);
       case 0: // 0 0 0
         Punch();
         movePaper(papermovement);
@@ -149,13 +156,13 @@ void loop() {
         break;
 
       case 8: // new column, paper movement go up
-        MoveGantryStepper(800, 800, 50);
+        MoveGantryStepper(800, 800, -50);
         delay(100);
         papermovement = 100;
         break;
 
       case 9: // new braille, paper movement go down
-        MoveGantryStepper(800, 800, 70);
+        MoveGantryStepper(800, 800, -70);
         delay(100);
         papermovement = -100;
         break;
@@ -170,7 +177,7 @@ void loop() {
       }
     Serial.print("counter second:"); Serial.println(counter_secdig);
     Serial.print("counter first:"); Serial.println(counter_firstdig);
-    if (counter_secdig == 7 && counter_firstdig == 0) {
+    if (counter_secdig == 5 && counter_firstdig == 5) {
       newLine();
       Serial.println("newline");
       counter_secdig = 0;
@@ -183,7 +190,7 @@ void loop() {
 void newLine() {
   MovePaperStepper(200, 200, -400);
   delay(100);
-  MoveGantryStepper(800, 800, -2380);
+  MoveGantryStepper(800, 800, 1870);
   delay(200);
 }
 
